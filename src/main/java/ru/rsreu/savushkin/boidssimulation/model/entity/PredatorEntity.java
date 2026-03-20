@@ -4,9 +4,9 @@ import ru.rsreu.savushkin.boidssimulation.config.Settings;
 import ru.rsreu.savushkin.boidssimulation.dto.SimulationSnapshot;
 import ru.rsreu.savushkin.boidssimulation.model.SimulationModel;
 
-import java.awt.*;
+import java.awt.Point;
 
-public class PredatorEntity extends RunnableEntity {
+public class PredatorEntity extends Entity {
 
     public PredatorEntity(int id, Point position, SimulationModel model) {
         super(id, position, Settings.PREDATOR_SPEED, model);
