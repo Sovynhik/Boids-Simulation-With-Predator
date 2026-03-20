@@ -6,17 +6,15 @@ import ru.rsreu.savushkin.boidssimulation.model.SimulationModel;
 
 import java.awt.Point;
 
-public abstract class RunnableEntity implements Runnable {
+public abstract class Entity implements Runnable {
     protected final int id;
     protected final Point position;
     protected double vx, vy;
     protected final double speed;
-    private volatile boolean running = false;
-    private Thread thread;
-
     protected final SimulationModel model;
+    private volatile boolean running = true;
 
-    protected RunnableEntity(int id, Point position, double speed, SimulationModel model) {
+    protected Entity(int id, Point position, double speed, SimulationModel model) {
         this.id = id;
         this.position = new Point(position);
         this.speed = speed;
@@ -27,32 +25,18 @@ public abstract class RunnableEntity implements Runnable {
         this.vy = Math.sin(angle) * speed;
     }
 
-    public final void start() {
-        if (running) return;
-        running = true;
-        thread = new Thread(this, "Entity-" + id);
-        thread.setDaemon(true);
-        thread.start();
-    }
-
-    public final void stop() {
-        running = false;
-        if (thread != null) thread.interrupt();
-    }
-
     @Override
-    public final void run() {
-        while (running && !Thread.interrupted()) {
+    public void run() {
+        while (running && !Thread.currentThread().isInterrupted()) {
             try {
-                SimulationSnapshot snapshot = model.createSnapshot();
-                calculateBehavior(snapshot);
-
-                position.x += vx;
-                position.y += vy;
-
-                applyBoundaryAvoidance();
-                clipToBounds();
-
+                SimulationSnapshot snapshot = model.getCurrentSnapshot();
+                if (snapshot != null) {
+                    calculateBehavior(snapshot);
+                    position.x += vx;
+                    position.y += vy;
+                    applyBoundaryAvoidance();
+                    clipToBounds();
+                }
                 Thread.sleep(Settings.ENTITY_TICK_DELAY);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -85,8 +69,12 @@ public abstract class RunnableEntity implements Runnable {
         }
     }
 
-    public double distanceTo(RunnableEntity other) {
+    public double distanceTo(Entity other) {
         return position.distance(other.position);
+    }
+
+    public void stop() {
+        running = false;
     }
 
     public int getId() { return id; }
