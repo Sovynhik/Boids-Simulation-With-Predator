@@ -28,11 +28,10 @@ public class SimulationModel {
     private final AtomicReference<SimulationSnapshot> currentSnapshot = new AtomicReference<>();
 
     public synchronized void startNewSimulation() {
-        finishSimulation(); // останавливаем старый пул
+        finishSimulation();
         entities.clear();
         eatEffects.clear();
 
-        // Создаём CachedThreadPool – для каждой сущности создаётся поток
         executor = Executors.newCachedThreadPool();
 
         PredatorEntity predator = createPredator();
@@ -48,7 +47,6 @@ public class SimulationModel {
         simulationOver = false;
         paused = false;
 
-        // Создаём начальный снимок
         updateSnapshot();
         notifySubscribers();
     }
@@ -84,7 +82,7 @@ public class SimulationModel {
     public void finishSimulation() {
         simulationOver = true;
         if (executor != null) {
-            executor.shutdownNow(); // прерываем все потоки
+            executor.shutdownNow();
             executor = null;
         }
         entities.forEach(Entity::stop);
@@ -97,26 +95,13 @@ public class SimulationModel {
         notifySubscribers();
     }
 
-    /**
-     * Вызывается из UI-потока (таймер). Создаёт новый снимок,
-     * затем обрабатывает коллизии и респаун.
-     */
     public void update() {
         if (simulationOver || paused) return;
 
-        // 1. Создаём снимок текущего состояния
         updateSnapshot();
-
-        // 2. Обрабатываем коллизии (поедание) – удаляем съеденных рыб
         applyCollisions();
-
-        // 3. Респаун рыб, если нужно
         checkAndRespawnFish();
-
-        // 4. Очищаем старые эффекты поедания
         clearOldEatEffects();
-
-        // 5. Уведомляем подписчиков (View)
         notifySubscribers();
     }
 
@@ -127,7 +112,6 @@ public class SimulationModel {
                 .findFirst()
                 .orElse(null);
 
-        // Копируем сущности в снимок (создаём список копий)
         List<Entity> copy = new ArrayList<>(entities);
         currentSnapshot.set(new SimulationSnapshot(
                 copy,
@@ -155,8 +139,8 @@ public class SimulationModel {
         }
 
         for (Entity e : toRemove) {
-            e.stop();               // останавливаем поток сущности
-            entities.remove(e);     // удаляем из списка
+            e.stop();
+            entities.remove(e);
         }
     }
 

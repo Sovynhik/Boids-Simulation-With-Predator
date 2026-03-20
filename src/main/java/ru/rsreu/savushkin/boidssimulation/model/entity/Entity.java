@@ -29,7 +29,6 @@ public abstract class Entity implements Runnable {
     public void run() {
         while (running && !Thread.currentThread().isInterrupted()) {
             try {
-                // Получаем актуальный снимок (атомарная операция)
                 SimulationSnapshot snapshot = model.getCurrentSnapshot();
                 if (snapshot != null) {
                     calculateBehavior(snapshot);
