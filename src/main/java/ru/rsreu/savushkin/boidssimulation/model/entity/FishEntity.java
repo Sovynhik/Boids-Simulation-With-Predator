@@ -8,7 +8,7 @@ import java.awt.Point;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FishEntity extends RunnableEntity {
+public class FishEntity extends Entity {
 
     public FishEntity(int id, Point position, SimulationModel model) {
         super(id, position, Settings.FISH_SPEED, model);
@@ -69,7 +69,6 @@ public class FishEntity extends RunnableEntity {
             totalVy += ((cohY / cohCount) - position.y) * Settings.COHESION_WEIGHT;
         }
 
-        // Лёгкий шум
         totalVx += (Math.random() - 0.5) * Settings.JITTER_STRENGTH;
         totalVy += (Math.random() - 0.5) * Settings.JITTER_STRENGTH;
 
