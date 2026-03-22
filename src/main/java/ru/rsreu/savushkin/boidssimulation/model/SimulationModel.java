@@ -212,7 +212,6 @@ public class SimulationModel {
         return SimulationState.Builder.create()
                 .fishes(fishDTOs)
                 .predator(predatorDTO)
-                .field(new Field(Settings.GAME_FIELD_WIDTH, Settings.GAME_FIELD_HEIGHT))
                 .simulationOver(simulationOver)
                 .build();
     }
@@ -225,8 +224,4 @@ public class SimulationModel {
     private void notifySubscribers() { subscribers.forEach(Subscriber::notifySubscriber); }
 
     public boolean isSimulationOver() { return simulationOver; }
-    public boolean isPaused() { return paused; }
-    public int getFishCount() {
-        return (int) entities.stream().filter(e -> e instanceof FishEntity).count();
-    }
 }
