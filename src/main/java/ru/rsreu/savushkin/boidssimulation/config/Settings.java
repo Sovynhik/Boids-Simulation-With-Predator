@@ -19,15 +19,9 @@ public final class Settings {
     public static final int GAME_FIELD_HEIGHT = 500;
     public static final Dimension GAME_FIELD_DIMENSION = new Dimension(GAME_FIELD_WIDTH, GAME_FIELD_HEIGHT);
 
-    public static final int FISH_SIZE = 6;
-    public static final int PREDATOR_SIZE = 14;
     public static final int ENTITY_TICK_DELAY = 16;
 
     public static final Color BACKGROUND_COLOR = new Color(10, 25, 50);
-    public static final Color FISH_COLOR = new Color(80, 200, 255);
-    public static final Color PREDATOR_COLOR = new Color(220, 20, 20);
-    public static final boolean DEBUG_SHOW_RADII = true;
-
 
     public static final double SEPARATION_WEIGHT = 2.2;
     public static final double ALIGNMENT_WEIGHT = 1.2;

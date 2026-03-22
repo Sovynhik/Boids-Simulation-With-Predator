@@ -13,10 +13,8 @@ public class Renderer {
     public void render(Graphics2D g, SimulationState state, SimulationModel model) {
         long time = System.currentTimeMillis();
 
-        // 1. Анимированный фон воды
         drawWaterBackground(g, time);
 
-        // 2. Тени под всеми рыбами (объём!)
         for (EntityDTO.FishDTO fish : state.getFishes()) {
             drawFishShadow(g, fish);
         }
@@ -24,20 +22,16 @@ public class Renderer {
             drawPredatorShadow(g, state.getPredator());
         }
 
-        // 3. Рыбки с машущим хвостом и градиентом
         for (EntityDTO.FishDTO fish : state.getFishes()) {
             drawFish(g, fish, time);
         }
 
-        // 4. Хищник — настоящая зубастая акула!
         if (state.getPredator() != null) {
             drawPredator(g, state.getPredator(), time);
         }
 
-        // 5. Эффекты поедания (вспышки)
         drawEatEffects(g, model);
 
-        // 6. Статистика
         drawStats(g, state.getFishes().size());
     }
 
@@ -73,13 +67,11 @@ public class Renderer {
         g.translate(p.x, p.y);
         g.rotate(angle);
 
-        // Градиентное тело
         GradientPaint gp = new GradientPaint(-15, 0, new Color(100, 200, 255),
                 15, 0, new Color(0, 120, 255));
         g.setPaint(gp);
         g.fill(new Ellipse2D.Double(-18, -10, 36, 20));
 
-        // Анимированный хвост
         double tailWave = Math.sin(time * 0.012 + fish.id() * 0.5) * 5;
         Polygon tail = new Polygon();
         tail.addPoint(-18, 0);
@@ -88,7 +80,6 @@ public class Renderer {
         g.setColor(new Color(0, 150, 255));
         g.fill(tail);
 
-        // Глаз
         g.setColor(Color.WHITE);
         g.fillOval(10, -5, 8, 10);
         g.setColor(Color.BLACK);
@@ -107,13 +98,11 @@ public class Renderer {
         g.translate(p.x, p.y);
         g.rotate(angle);
 
-        // Тело акулы
         GradientPaint gp = new GradientPaint(0, -18, new Color(220, 20, 60),
                 0, 18, new Color(139, 0, 0));
         g.setPaint(gp);
         g.fill(new RoundRectangle2D.Double(-30, -18, 60, 36, 25, 25));
 
-        // Спинной плавник
         g.setColor(new Color(180, 0, 0));
         Polygon dorsal = new Polygon();
         dorsal.addPoint(0, -18);
@@ -121,7 +110,6 @@ public class Renderer {
         dorsal.addPoint(15, -15);
         g.fill(dorsal);
 
-        // Злые глаза
         g.setColor(Color.WHITE);
         g.fillOval(22, -10, 12, 12);
         g.fillOval(22, 2, 12, 12);
@@ -129,7 +117,6 @@ public class Renderer {
         g.fillOval(26, -7, 6, 6);
         g.fillOval(26, 5, 6, 6);
 
-        // Зубы
         g.setColor(Color.WHITE);
         for (int i = 0; i < 10; i++) {
             int x = 28 + i * 3;

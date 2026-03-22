@@ -21,7 +21,7 @@ public class SimulationView extends JPanel implements Subscriber {
     public SimulationView(SimulationController controller) {
         this.controller = controller;
         this.menuManager = new MenuManager(this);
-        this.inputManager = new InputManager(this, controller);
+        this.inputManager = new InputManager(this);
         this.renderer = new Renderer();
         this.fileDialog = new FileDialogManager(this);
         initUI();
